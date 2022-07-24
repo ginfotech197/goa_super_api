@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('generate:result')->dailyAt('21:00')->timezone('Asia/Kolkata');
 
 
-        $schedule->command('generateFatafat:result')->cron('0 10-19 * * *')->timezone('Asia/Kolkata');
+        $schedule->command('generateFatafat:result')->cron('0 10-19/1 * * *')->timezone('Asia/Kolkata');
 //        $schedule->command('generateFatafat:result')->cron('00 10,13,16,19 * * * ')->timezone('Asia/Kolkata');
 //        $schedule->command('generateShirdi:result')->cron('30 10,13,16,18,19 * * * ')->timezone('Asia/Kolkata');
 //        $schedule->command('generateShirdi:result')->cron('00 12,15,21 * * * ')->timezone('Asia/Kolkata');
