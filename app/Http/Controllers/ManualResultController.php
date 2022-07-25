@@ -28,7 +28,30 @@ class ManualResultController extends Controller
         $requestedData = (object)$request->json()->all();
 
         $drawMasterTemp = DrawMaster::whereGameId($requestedData->gameId)->whereId($requestedData->drawMasterId)->first();
-        if ($drawMasterTemp->is_draw_over === 'yes'){
+
+//        if(($requestedData->gameDate != Carbon::today()->format('Y-m-d')){
+        if($requestedData->gameDate != Carbon::today()->format('Y-m-d')){
+
+//            manualResult = new ManualResult();
+            $manualResult = new ManualResult();
+            $manualResult->draw_master_id = $requestedData->drawMasterId;
+            $manualResult->number_combination_id = $requestedData->numberCombinationId;
+            $manualResult->game_id = $requestedData->gameId;
+            $manualResult->game_date = Carbon::today();
+            $manualResult->save();
+
+            $resultMaster = new ResultMaster();
+            $resultMaster->draw_master_id = $requestedData->drawMasterId;
+            $resultMaster->number_combination_id = $requestedData->numberCombinationId;
+            $resultMaster->game_id = $requestedData->gameId;
+//            $resultMaster->game_date = Carbon::today();
+            $resultMaster->game_date = $requestedData->gameDate;
+            $resultMaster->save();
+
+            return response()->json(['success'=>1,'data'=> new ManualResultResource($manualResult)], 200,[],JSON_NUMERIC_CHECK);
+        }
+
+        if (($drawMasterTemp->is_draw_over === 'yes')){
 
             $manualResult = new ManualResult();
             $manualResult->draw_master_id = $requestedData->drawMasterId;
@@ -41,7 +64,8 @@ class ManualResultController extends Controller
             $resultMaster->draw_master_id = $requestedData->drawMasterId;
             $resultMaster->number_combination_id = $requestedData->numberCombinationId;
             $resultMaster->game_id = $requestedData->gameId;
-            $resultMaster->game_date = Carbon::today();
+//            $resultMaster->game_date = Carbon::today();
+            $resultMaster->game_date = $requestedData->gameDate;
             $resultMaster->save();
 
             return response()->json(['success'=>1,'data'=> new ManualResultResource($manualResult)], 200,[],JSON_NUMERIC_CHECK);
