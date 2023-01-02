@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\RechargeToUser;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\CustomVoucher;
 
@@ -15,6 +16,7 @@ use App\Http\Resources\TerminalResource;
 use App\Models\StockistToTerminal;
 use Illuminate\Http\Request;
 /////// for log
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,6 +26,17 @@ class TerminalController extends Controller
     public function get_all_terminals(){
         $terminals = UserType::find(4)->users;
         return TerminalResource::collection($terminals);
+    }
+
+    public function reset_user_password(Request $request){
+        $requestedData = (object)$request->json()->all();
+        $user = User::find($requestedData->userId);
+        if(Hash::check($requestedData->password, $user->password)){
+            $user->password = md5($requestedData->newPassword);
+            $user->save();
+            return response()->json(['success'=>1], 200,[],JSON_NUMERIC_CHECK);
+        }
+        return response()->json(['success'=>0], 200,[],JSON_NUMERIC_CHECK);
     }
 
     // public function get_stockist_by_terminal_id(){

@@ -143,6 +143,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('superStockists/balance',[SuperStockistController::class, 'update_balance_to_super_stockist']);
 
     Route::post('checkAvailability', [UserController::class, 'pin_availability']);
+    Route::post('resetPassword', [TerminalController::class, 'reset_user_password']);
 
 });
 
